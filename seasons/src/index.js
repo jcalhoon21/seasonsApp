@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import SeasonDisplay from './SeasonDisplay';
+import Loader from './Loader';
 
 class App extends React.Component {
   // constructor(props) {
@@ -22,8 +23,10 @@ class App extends React.Component {
     );
   }
 
-  render() {
-    // {this.state.errorMessage && !this.state.latitude ? this.state.errorMessage : }
+
+  // putting your conditional render in a function reduces amount of returns in your actual render method
+  renderContent() {
+// {this.state.errorMessage && !this.state.latitude ? this.state.errorMessage : }
     if (this.state.errorMessage && !this.state.latitude) {
       return <div>Error: {this.state.errorMessage}</div>
     }
@@ -33,7 +36,7 @@ class App extends React.Component {
       return <div><SeasonDisplay latitude={this.state.latitude} /></div>
     }
 
-    return <div>Loading...</div>
+    return <Loader message="Please accept location request" />
 
   // return (
   //   <div>
@@ -41,6 +44,14 @@ class App extends React.Component {
   //     Error: {this.state.errorMessage}
   //   </div>
   // )
+  }
+
+  render() {
+    return (
+      <div>
+        {this.renderContent()}
+      </div>
+    )
   }
 }
 
