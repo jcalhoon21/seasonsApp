@@ -1,31 +1,57 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import SeasonDisplay from './SeasonDisplay';
+import Loader from './Loader';
 
-//Functional Component
-// const App = () => {
-//   window.navigator.geolocation.getCurrentPosition(
-//     (position) => console.log(position, 'position'),
-//     (err) => console.log(err)
-//   );
-
-//   return (
-//     <div>
-//       Latitude: 
-//     </div>
-//   )
-// };
-
-
-//Class Based Component
 class App extends React.Component {
-    
-  render() {
-  window.navigator.geolocation.getCurrentPosition(
-    (position) => console.log(position, 'position'),
-    (err) => console.log(err)
+  // constructor(props) {
+  //   super(props); // reference to React.Component function
+
+  //   this.state ={
+  //     latitude: null, // we dont know what it is yet but eventually we will
+  //     errorMessage: ''
+  //   };
+  // }
+
+  // same as constructor
+  state = { latitude: null, errorMessage: ''};
+
+  componentDidMount() {
+    window.navigator.geolocation.getCurrentPosition(
+      (position) => this.setState({ latitude: position.coords.latitude }),
+      (err) => this.setState({ errorMessage: err.message })
     );
-    
-  return <div> Latitude: </div>
+  }
+
+
+  // putting your conditional render in a function reduces amount of returns in your actual render method
+  renderContent() {
+// {this.state.errorMessage && !this.state.latitude ? this.state.errorMessage : }
+    if (this.state.errorMessage && !this.state.latitude) {
+      return <div>Error: {this.state.errorMessage}</div>
+    }
+
+    if (!this.state.errorMessage && this.state.latitude) {
+      // return <div>Latitude: {this.state.latitude}</div>
+      return <div><SeasonDisplay latitude={this.state.latitude} /></div>
+    }
+
+    return <Loader message="Please accept location request" />
+
+  // return (
+  //   <div>
+  //     Latitude: {this.state.latitude} <br />
+  //     Error: {this.state.errorMessage}
+  //   </div>
+  // )
+  }
+
+  render() {
+    return (
+      <div>
+        {this.renderContent()}
+      </div>
+    )
   }
 }
 
